@@ -1,0 +1,9 @@
+COPY START 500
+LENGTH WORD 3
+BUFFER WORD 5
+    LDA  #3
+  SUBR 8-S,T
+MAXLEN  BYTE C'EOF'
+END 
+
+            
