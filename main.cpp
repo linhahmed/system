@@ -36,12 +36,12 @@ public:
         numOPerands = getNumOperands();
         storeRegisters();
     }
-   bool handleLine(string line) {
+    bool handleLine(string line) {
         vector<string> data = noSpace(line);
         struct preobj info = extract(data);
-        if (info.Operator == "") 
+        if (info.Operator == "")
             return false;
-        
+
         //check if END
         if (info.Operator == "START") {
             locctr = info.Operand;
@@ -52,34 +52,34 @@ public:
             return true;
         }
         calcObjectCode(info);
-	   return true;
+        return true;
     }
-	
+
 
     void calcObjectCode(preobj info) {
         bool base = false;
         string B = "";
         if (info.Operator == "WORD") {
-                info.objectCode = toHex(toDec(info.Operand));
+            info.objectCode = toHex(toDec(info.Operand));
             while (size(info.objectCode) < 6) {
-                    string temp = info.objectCode;
-                    info.objectCode = "0" + temp;
-             }
-                info.locctr = locctr;
-                table.push_back(info);
-                Label_is_Found(info.Label, locctr, "R");
+                string temp = info.objectCode;
+                info.objectCode = "0" + temp;
+            }
+            info.locctr = locctr;
+            table.push_back(info);
+            Label_is_Found(info.Label, locctr, "R");
             locctr = toHex(toDec(locctr) + 3);
         }
         else if (info.Operator == "RESW") {
             info.locctr = locctr;
             table.push_back(info);
-            Label_is_Found(info.Label, locctr,"R");
+            Label_is_Found(info.Label, locctr, "R");
             locctr = toHex(toDec(locctr) + 3 * StringToInt(info.Operand));
         }
         else if (info.Operator == "RESB") {
             info.locctr = locctr;
             table.push_back(info);
-            Label_is_Found(info.Label, locctr,"R");
+            Label_is_Found(info.Label, locctr, "R");
             cout << toDec(locctr) << endl;
             cout << StringToInt(info.Operand) << endl;
             locctr = toHex(toDec(locctr) + StringToInt(info.Operand));
@@ -101,10 +101,10 @@ public:
             }
             info.locctr = locctr;
             table.push_back(info);
-            Label_is_Found(info.Label, locctr,"R");
+            Label_is_Found(info.Label, locctr, "R");
             locctr = toHex(toDec(locctr) + len);
         }
-         else if (info.Operator == "EQU") {
+        else if (info.Operator == "EQU") {
             char type = char(0);
             if (info.Operand[0] == '#' || info.Operand[0] == '@') {
                 type = info.Operand[0];
@@ -115,14 +115,14 @@ public:
                 locctr = getTargetAddress(operand[0], type, locctr);
                 info.locctr = locctr;
                 table.push_back(info);
-                Label_is_Found(info.Label, operand[0],"A");
+                Label_is_Found(info.Label, operand[0], "A");
             }
             else if (operand[0] == "*") {
                 info.locctr = locctr;
                 table.push_back(info);
-                Label_is_Found(info.Label, locctr,"R");
+                Label_is_Found(info.Label, locctr, "R");
             }
-            else if (getTargetAddress(operand[0], type, locctr) != "NotFound" ) {
+            else if (getTargetAddress(operand[0], type, locctr) != "NotFound") {
                 if (getTargetAddress(operand[0], type, locctr) == "Error") {
                     cout << "Error in calculating the expression";
                     end = 1;
@@ -132,10 +132,10 @@ public:
                 cout << "loctr =   " << locctr << '\n';
                 info.locctr = locctr;
                 table.push_back(info);
-                Label_is_Found(info.Label, locctr,"R");
+                Label_is_Found(info.Label, locctr, "R");
             }
         }
-         else if (info.Operator == "ORG") {
+        else if (info.Operator == "ORG") {
             char type = char(0);
             if (info.Operand[0] == '#' || info.Operand[0] == '@') {
                 type = info.Operand[0];
@@ -161,27 +161,27 @@ public:
                 }
             }
         }
-        else if(info.Operator== "BASE") {
+        else if (info.Operator == "BASE") {
             char type = char(0);
             if (info.Operand[0] == '#' || info.Operand[0] == '@') {
                 type = info.Operand[0];
                 info.Operand.erase(0, 1);
             }
-              string value = getTargetAddress(info.Operand, type, locctr);
-              if (value != "NotFound") {
-                  if (getTargetAddress(info.Operand, type, locctr) == "Error") {
-                      cout << "Error in calculating the expression";
-                      end = 1;
-                      return;
-                  }
-                  base = true;
-                  B = value;
-              }
-         }
-         else if(info.Operator== "NOBASE") {
+            string value = getTargetAddress(info.Operand, type, locctr);
+            if (value != "NotFound") {
+                if (getTargetAddress(info.Operand, type, locctr) == "Error") {
+                    cout << "Error in calculating the expression";
+                    end = 1;
+                    return;
+                }
+                base = true;
+                B = value;
+            }
+        }
+        else if (info.Operator == "NOBASE") {
             base = false;
-         }
-         else if (info.Operator == "END") {
+        }
+        else if (info.Operator == "END") {
             info.locctr = locctr;
             table.push_back(info);
         }
@@ -213,8 +213,8 @@ public:
                     end = 1;
                     return;
                 }
-                if(type=='#'&& is_number(info.Operand))
-                    Label_is_Found(info.Label, locctr,"A");
+                if (type == '#' && is_number(info.Operand))
+                    Label_is_Found(info.Label, locctr, "A");
                 else
                     Label_is_Found(info.Label, locctr, "R");
                 info.locctr = locctr;
@@ -223,7 +223,7 @@ public:
             }
         }
         printSymbols();
-        cout << "-----------------------------------------"<<'\n';
+        cout << "-----------------------------------------" << '\n';
     }
 
     void readFile(string filename) {
@@ -231,11 +231,11 @@ public:
         myfile.open(filename.c_str());
         string line;
         while ((getline(myfile, line)) && (end == 0)) {
-            if (   !(strchr(line.c_str(), '.'))  )
-            error = handleLine(line);
+            if (!(strchr(line.c_str(), '.')))
+                error = handleLine(line);
 
         }
-          
+
         myfile.close();
         bool e = checkAllLabelsAreFound();
         //if e is true then write to object file
@@ -244,12 +244,12 @@ public:
         else {
             if (end == 0) {
                 for (int i = 0;i < table.size();i++)
-                    cout <<"   "<< table.at(i).locctr << "               |" << table.at(i).Label << "                |" << table.at(i).Operator << "                |" << table.at(i).Operand << "                  |" << table.at(i).objectCode << '\n';
+                    cout << "   " << table.at(i).locctr << "               |" << table.at(i).Label << "                |" << table.at(i).Operator << "                |" << table.at(i).Operand << "                  |" << table.at(i).objectCode << '\n';
                 writefile(table, getSymbolTable());
             }
-               
+
         }
-            
+
     }
 
     struct preobj extract(vector<string> data) {
@@ -273,7 +273,7 @@ public:
 
                 if ((it != opcode.end() && numOPerands[data.at(1)] == 0)
                     || (numOPerands[data.at(1)] == 2 && data.at(2).find(",") == string::npos)
-                    || (numOPerands[data.at(1)] == 1 && strchr(data.at(2).c_str(), ','))
+                    || (numOPerands[data.at(1)] == 1 && strchr(data.at(2).c_str(), ',') && !(strstr(data.at(2).c_str(), ",X")))
                     || ((strchr(data.at(2).c_str(), '@') || strchr(data.at(2).c_str(), '#')) && strchr(data.at(2).c_str(), ','))) {
                     cout << "error in operand\n";
                     cout << "operator  \" " << data.at(1) << " \" doen't match with operand \" " << data.at(2) << " \"" << '\n';
@@ -291,8 +291,8 @@ public:
 
                     || (numOPerands[data.at(0)] == 2 && data.at(1).find(",") == string::npos)
 
-                    || (numOPerands[data.at(0)] == 1 && strchr(data.at(1).c_str(), ','))
-                    || ((strchr(data.at(1).c_str(), '@') || strchr(data.at(1).c_str(), '#')) && strchr(data.at(1).c_str(), ','))) {
+                    || (numOPerands[data.at(0)] == 1 && strchr(data.at(1).c_str(), ',') && !(strchr(data.at(1).c_str(), 'X')))
+                    || ((strchr(data.at(1).c_str(), '@') || strchr(data.at(1).c_str(), '#')) && strstr(data.at(1).c_str(), ",X"))) {
                     cout << "error in operand\n";
 
                     cout << "operator  \" " << data.at(0) << " \" doen't match with operand \" " << data.at(1) << " \" " << '\n';
@@ -322,6 +322,9 @@ public:
             Operand = data.at(1);
         }
 
+
+
+
         /*
           it = opcode.find(Operator);
         if (Operator!="START"&&it == opcode.end()) {
@@ -331,6 +334,8 @@ public:
 
         }
         */
+
+
 
         info.Label = Label;
         info.Operand = Operand;

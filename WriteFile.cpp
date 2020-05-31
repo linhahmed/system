@@ -50,7 +50,7 @@ void  writefile(vector<preobj> Map, map<string, symbol_info>modification) {    /
 
     index = 0;
     while (index < Map.size()) {      //Text records
-        if (Map.at(index).Operator != "START" && Map.at(index).objectCode!="") {
+        if (Map.at(index).Operator != "START" ) {
             int counter = 0; int length = 0;
             int save = index;
             while (save < Map.size() && Map.at(save).Operator != "START" && Map.at(save).Operator != "END" && (counter + (Map.at(save).objectCode.size() / 2)) <= 30) {

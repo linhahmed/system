@@ -37,10 +37,11 @@ void ObjectCode::Label_is_Found(string label, string address,string flag) {
 void ObjectCode::printSymbols() {
 	map<string, symbol_info>::iterator itr;
 	for (itr = SYMTAB.begin(); itr != SYMTAB.end(); ++itr) {
-		cout << '\t' << itr->first
-			<< '\t' << itr->second.address << "   " << itr->second.flag;
-		for (int i = 0; i < itr->second.reff.size(); i++)
-			cout << itr->second.reff.at(i) ;
+		cout << '\t' << itr->first<<"    ";
+		for (int i = 0; i < itr->second.reff.size(); i++) {
+			cout << itr->second.address;
+			cout << "    " << itr->second.reff.at(i);
+		}
 		cout << '\n';
 	}
 }

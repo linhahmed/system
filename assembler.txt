@@ -1,9 +1,16 @@
-COPY START 500
-LENGTH WORD 3
-BUFFER WORD 5
-    LDA  #3
-  SUBR 8-S,T
-MAXLEN  BYTE C'EOF'
-END 
+COP START 1000
+    STL    #10
+    RMO    L,A
+    LDA    THREE
+    COMP   #4
+    JLT    LOOP
+    COMP   #0
+    JEQ    LOP
+LOOP LDA   #4
+     +ADD  #9
+LOP  LDX   #1
+     RMO   X,A
+THREE WORD 3
+     END  1000
 
             
